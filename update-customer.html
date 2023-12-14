@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Customer</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #customerForm {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Customer</h1>
+
+    <!-- Customer Update Form -->
+    <div id="customerForm">
+        <form onsubmit="updateCustomerDetails(event)">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" required>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" required>
+
+            <label for="street">Street:</label>
+            <input type="text" id="street" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" required>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" required>
+
+            <button type="submit">Update</button>
+        </form>
+    </div>
+
+    <script>
+        // Retrieve customer data from localStorage
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || [];
+
+        // Retrieve the index from the query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const index = urlParams.get('index');
+
+        function prefillForm() {
+            if (index !== null && index < customerData.length) {
+                const customer = customerData[index];
+
+                // Prefill the form with customer details
+                document.getElementById('firstName').value = customer.firstName;
+                document.getElementById('lastName').value = customer.lastName;
+                document.getElementById('street').value = customer.street;
+                document.getElementById('address').value = customer.address;
+                document.getElementById('city').value = customer.city;
+                document.getElementById('state').value = customer.state;
+                document.getElementById('email').value = customer.email;
+                document.getElementById('phone').value = customer.phone;
+            }
+        }
+        window.onload = prefillForm;
+
+        function updateCustomerDetails(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const updatedCustomer = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                street: document.getElementById('street').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+            };
+
+            // Update the customer in the array
+            if (index !== null && index < customerData.length) {
+                customerData[index] = updatedCustomer;
+
+                // Update localStorage with the modified customerData
+                localStorage.setItem('customerData', JSON.stringify(customerData));
+
+                // Redirect back to the customer list page
+                window.location.href = 'customer-list.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #customerForm {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Customer</h1>
+
+    <!-- Customer Form -->
+    <div id="customerForm">
+        <form onsubmit="addCustomer(event)">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" required>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" required>
+
+            <label for="street">Street:</label>
+            <input type="text" id="street" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" required>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Retrieve customer data from localStorage
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || [];
+
+        function addCustomer(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const street = document.getElementById('street').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // Validate that both first name and last name are provided
+            if (!firstName || !lastName) {
+                alert('Please provide both first name and last name.');
+                return;
+            }
+
+            // Create a customer object
+            const customer = {
+                firstName: firstName,
+                lastName: lastName,
+                street: street,
+                address: address,
+                city: city,
+                state: state,
+                email: email,
+                phone: phone,
+            };
+
+            // Add the new customer to the existing customerData array
+            customerData.push(customer);
+
+            // Update the customer list on the main page
+            updateCustomerList();
+
+            // Update localStorage with the modified customerData
+            localStorage.setItem('customerData', JSON.stringify(customerData));
+
+            // Redirect back to the customer list page
+            window.location.href = 'customer-list.html';
+        }
+
+        function updateCustomerList() {
+            const customerListContainer = document.getElementById('customerList');
+            // Clear existing content
+     //       customerListContainer.innerHTML = '';
+
+            // Loop through the customerData array and display each customer
+            customerData.forEach((customer, index) => {
+                const customerItem = document.createElement('div');
+                customerItem.className = 'customerItem';
+
+                // Display customer details
+                customerItem.innerHTML = `
+                    <strong>Name:</strong> ${customer.firstName} ${customer.lastName}<br>
+                    <strong>Street:</strong> ${customer.street}<br>
+                    <strong>Address:</strong> ${customer.address}<br>
+                    <strong>City:</strong> ${customer.city}<br>
+                    <strong>State:</strong> ${customer.state}<br>
+                    <strong>Email:</strong> ${customer.email}<br>
+                    <strong>Phone:</strong> ${customer.phone}<br>
+                    <button onclick="updateCustomer(${index})">Update</button>
+                    <button onclick="deleteCustomer(${index})">Delete</button>
+                `;
+
+                // Append the customer item to the container
+        //        customerListContainer.appendChild(customerItem);
+            });
+        }
+    </script>
+</body>
+</html>

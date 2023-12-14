@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #customerList {
+            margin-top: 20px;
+        }
+
+        .customerItem {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer List</h1>
+
+    <!-- Button to Add Customer -->
+    <button onclick="redirectToCustomerForm()">Add Customer</button>
+
+    <!-- Customer List Container -->
+    <div id="customerList">
+        <!-- Customer list will be displayed here -->
+    </div>
+
+    <script>
+        // Retrieve customer data from localStorage
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || [];
+
+        function redirectToCustomerForm() {
+            window.location.href = 'add-customer.html';
+        }
+
+        function updateCustomerList() {
+            const customerListContainer = document.getElementById('customerList');
+            customerListContainer.innerHTML = ''; // Clear existing content
+
+            // Loop through the customerData array and display each customer
+            customerData.forEach((customer, index) => {
+                const customerItem = document.createElement('div');
+                customerItem.className = 'customerItem';
+
+                // Display customer details
+                customerItem.innerHTML = `
+                    <strong>Name:</strong> ${customer.firstName} ${customer.lastName}<br>
+                    <strong>Street:</strong> ${customer.street}<br>
+                    <strong>Address:</strong> ${customer.address}<br>
+                    <strong>City:</strong> ${customer.city}<br>
+                    <strong>State:</strong> ${customer.state}<br>
+                    <strong>Email:</strong> ${customer.email}<br>
+                    <strong>Phone:</strong> ${customer.phone}<br>
+                    <button onclick="redirectToUpdatePage(${index})">Update</button>
+                    <button onclick="deleteCustomer(${index})">Delete</button>
+                `;
+
+                // Append the customer item to the container
+                customerListContainer.appendChild(customerItem);
+            });
+        }
+
+        function redirectToUpdatePage(index) {
+            // Redirect to the update page with the selected customer's index
+            window.location.href = `update-customer.html?index=${index}`;
+        }
+
+        function deleteCustomer(index) {
+            // Remove the customer at the specified index
+            customerData.splice(index, 1);
+
+            // Update the customer list on the main page
+            updateCustomerList();
+
+            // Update localStorage with the modified customerData
+            localStorage.setItem('customerData', JSON.stringify(customerData));
+        }
+
+        // Update the customer list on page load
+        updateCustomerList();
+    </script>
+</body>
+</html>
+
